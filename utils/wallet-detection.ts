@@ -1,4 +1,4 @@
-export type WalletType = "TrustWallet" | "SafePal" | "Unknown"
+export type WalletType = "TrustWallet" | "SafePal" | "WalletConnect" | "Unknown"
 
 export const detectWalletEnvironment = (): WalletType => {
   if (typeof window === "undefined") return "Unknown"

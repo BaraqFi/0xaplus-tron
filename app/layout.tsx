@@ -4,22 +4,25 @@ import ContextProvider from "@/context"
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: '0xaplus',
+  description: 'test tron and evms',
 }
 
 export default async function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
-  const cookieHeaders = headers()
-  const cookies = (await cookieHeaders).get('cookie')
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+
+  const cookieHeaders = await headers()
+  const cookies = cookieHeaders.get('cookie')
+  
 
   return (
     <html lang="en">
-      <body><ContextProvider cookies={cookies}>{children}</ContextProvider></body>
+      <body>
+        <ContextProvider cookies={cookies}>{children}</ContextProvider>
+      </body>
     </html>
-  )
+  );
 }

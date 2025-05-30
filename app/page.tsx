@@ -1,7 +1,12 @@
+'use client';
+
+import { useAccount } from "wagmi";
+
 import TronWalletConnector from "@/components/tron-wallet-connector"
-import EvmWalletConnector from "@/components/evm-wallet-connector"
 
 export default function HomePage() {
+
+  const { address, isConnected } = useAccount()
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700">
       <div className="container mx-auto px-4 py-8">
@@ -11,7 +16,7 @@ export default function HomePage() {
           </div>
 
           <div className="w-full max-w-md">
-            <EvmWalletConnector />
+            <w3m-button />
           </div>
 
           <div className="grid grid-cols-4 gap-4 mt-8">

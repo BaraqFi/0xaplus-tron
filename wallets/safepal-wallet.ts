@@ -23,7 +23,7 @@ export class SafePalConnector {
 
       if (!tronWeb) {
         throw new Error(
-          "TronWeb not detected. Please make sure you're using SafePal's DApp browser and refresh the page.",
+          "TronWeb not detected. Please make sure you're using SafePal (mobile DApp browser or desktop extension), then refresh the page.",
         )
       }
 

@@ -23,7 +23,7 @@ export class TrustWalletConnector {
 
       if (!tronWeb) {
         throw new Error(
-          "TronWeb not detected. Please make sure you're using TrustWallet's DApp browser and refresh the page.",
+          "TronWeb not detected. Please make sure you're using Trust Wallet (mobile DApp browser or desktop extension), then refresh the page.",
         )
       }
 

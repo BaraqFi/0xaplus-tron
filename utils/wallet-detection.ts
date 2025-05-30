@@ -35,14 +35,14 @@ export const detectWalletEnvironment = (): WalletType => {
   return "Unknown"
 }
 
-export const getWalletDisplayName = (walletType: WalletType): string => {
-  switch (walletType) {
+export function getWalletDisplayName(wallet: WalletType): string {
+  switch (wallet) {
     case "TrustWallet":
-      return "TrustWallet"
+      return "Trust Wallet"
     case "SafePal":
-      return "SafePal"
+      return "SafePal Wallet"
     default:
-      return "Trust/SafePal"
+      return "Tron Wallet"
   }
 }
 

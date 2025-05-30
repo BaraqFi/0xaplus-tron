@@ -11,17 +11,15 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
-  const cookieHeaders = await headers()
-  const cookies = cookieHeaders.get('cookie')
+}) {
+  const cookieHeaders = headers()
+  const cookies = (await cookieHeaders).get('cookie')
 
   return (
     <html lang="en">
-      <body>
-        <ContextProvider cookies={cookies}>{children}</ContextProvider>
-      </body>
+      <body><ContextProvider cookies={cookies}>{children}</ContextProvider></body>
     </html>
   )
 }

@@ -150,7 +150,7 @@ export default function TronWalletConnector() {
               </Button>
 
               {/* BSC and ETH buttons */}
-              <div className="flex gap-4">
+              {/* <div className="flex gap-4">
                 <Button className="flex-1 h-12 text-lg font-semibold bg-yellow-500 hover:bg-yellow-600 text-black shadow-lg">
                   BSC
                 </Button>
@@ -158,7 +158,7 @@ export default function TronWalletConnector() {
                 <Button className="flex-1 h-12 text-lg font-semibold bg-gray-400 hover:bg-gray-500 text-white shadow-lg">
                   ETH
                 </Button>
-              </div>
+              </div> */}
             </>
           )}
         </div>

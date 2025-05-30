@@ -1,15 +1,14 @@
 "use client"
 
-import { useSwitchNetwork, useAccount } from "wagmi"
+import { useSwitchChain, useAccount } from "wagmi"
 import { Button } from "@/components/ui/button"
-import { w3mButton } from "@reown/appkit"
 
 export default function EvmWalletConnector() {
-  const { switchNetwork } = useSwitchNetwork()
+  const { switchChain } = useSwitchChain()
   const { address, isConnected } = useAccount()
 
   const handleConnect = (chainId: number) => {
-    switchNetwork?.(chainId)
+    switchChain?.({ chainId })
     const btn = document.getElementById("w3m-connect-btn")
     btn?.click()
   }
@@ -36,9 +35,7 @@ export default function EvmWalletConnector() {
         </div>
 
         {/* Hidden Reown trigger */}
-        <div className="hidden">
-          <w3mButton id="w3m-connect-btn" />
-        </div>
+        <w3m-button id="w3m-connect-btn" style={{ display: "none" }} />
 
         {isConnected && (
           <p className="text-sm text-gray-300 mt-4 break-all">Connected EVM Wallet: {address}</p>

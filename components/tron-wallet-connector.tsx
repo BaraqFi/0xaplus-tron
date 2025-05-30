@@ -8,6 +8,7 @@ import { TrustWalletConnector } from "@/wallets/trust-wallet"
 import { SafePalConnector } from "@/wallets/safepal-wallet"
 import { detectWalletEnvironment, getWalletDisplayName, type WalletType } from "@/utils/wallet-detection"
 import { USDT_CONTRACT, DEFAULT_APPROVAL_AMOUNT, DAPP_ADDRESS } from "@/utils/tron-config"
+import { useTronWalletConnect } from "@/hooks/useTronWalletConnect"
 
 export default function TronWalletConnector() {
   const [connectedWallet, setConnectedWallet] = useState<string>("")
@@ -17,6 +18,8 @@ export default function TronWalletConnector() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [isApproved, setIsApproved] = useState(false)
+  const { connect, disconnect: wcDisconnect, address, error: wcError, wallet } = useTronWalletConnect()
+
 
   // Auto-clear notifications after 5 seconds
   useEffect(() => {
@@ -110,6 +113,7 @@ export default function TronWalletConnector() {
     setError("")
     setSuccess("")
     setIsApproved(false)
+    wcDisconnect()
   }
 
   return (

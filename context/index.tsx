@@ -2,7 +2,7 @@
 
 import { projectId, wagmiAdapter } from "@/config"
 import { createAppKit } from "@reown/appkit"
-import { mainnet, bsc } from "@reown/appkit/networks"
+import { mainnet, bsc, tron } from "@reown/appkit/networks"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import React, { type ReactNode } from "react"
 import { cookieToInitialState, WagmiProvider, type Config } from "wagmi"
@@ -16,7 +16,7 @@ if (!projectId) {
 const modal = createAppKit({
     adapters: [wagmiAdapter],
     projectId,
-    networks: [mainnet, bsc],
+    networks: [mainnet, bsc, tron],
     defaultNetwork: mainnet,
     themeMode: 'dark'
 

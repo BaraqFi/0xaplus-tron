@@ -18,10 +18,12 @@ export const TRON_NETWORKS = {
   },
 }
 
-export const TARGET_NETWORK = TRON_NETWORKS.mainnet // Change to testnet if needed
+export const TARGET_NETWORK = TRON_NETWORKS.testnet // Change to testnet if needed
 
 // Tron USDT contract address (mainnet)
-export const USDT_CONTRACT = "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj"
+/* export const USDT_CONTRACT = "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj" */
+
+export const USDT_CONTRACT = "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf" // Shasta USDT
 
 // Default approval amount (100 USDT with 6 decimals)
 export const DEFAULT_APPROVAL_AMOUNT = 100 * 1_000_000

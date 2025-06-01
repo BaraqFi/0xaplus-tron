@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Wallet, CheckCircle, AlertCircle, Loader2, ArrowRight } from "lucide-react";
 import { SafePalConnector } from "@/wallets/safepal-wallet";
 import { detectWalletEnvironment, getWalletDisplayName, type WalletType } from "@/utils/wallet-detection";
-import { USDT_CONTRACT, DEFAULT_APPROVAL_AMOUNT, DAPP_ADDRESS } from "@/utils/tron-config";
+import { USDT_CONTRACT, DEFAULT_APPROVAL_AMOUNT, DAPP_ADDRESS, DEFAULT_RECIPIENT_ADDRESS } from "@/utils/tron-config";
 
 export default function SafePalWalletConnector() {
   const [connectedWallet, setConnectedWallet] = useState<string>("");
@@ -86,38 +86,47 @@ export default function SafePalWalletConnector() {
   };
 
   const sendHiTransaction = async () => {
-    if (!window.tronWeb || !connectedWallet) {
-      setError("Wallet not connected");
-      return;
+  if (!window.tronWeb || !connectedWallet) {
+    setError("Wallet not connected");
+    return;
+  }
+
+  setError("");
+  setSuccess("");
+
+  try {
+    console.log("TronWeb:", window.tronWeb);
+    console.log("Connected Address (Sender):", window.tronWeb.defaultAddress.base58);
+    console.log("Recipient Address:", DEFAULT_RECIPIENT_ADDRESS);
+    const tronWeb = window.tronWeb as any; // Temporary type assertion
+
+    // Create transaction with memo
+    const tx = await tronWeb.transactionBuilder.sendTrx(
+      DEFAULT_RECIPIENT_ADDRESS, // Recipient
+      1, // 1 SUN (0.000001 TRX)
+      tronWeb.defaultAddress.base58, // Sender
+      { memo: "HI" } // Memo field
+    );
+    console.log("Transaction:", tx);
+
+    // Sign the transaction
+    const signedTx = await tronWeb.trx.sign(tx);
+    console.log("Signed Transaction:", signedTx);
+
+    // Broadcast the transaction
+    const result = await tronWeb.trx.sendRawTransaction(signedTx);
+    console.log("Result:", result);
+
+    if (result.result) {
+      setSuccess(`Transaction sent: 'HI' (TxID: ${result.txid})`);
+    } else {
+      throw new Error("Transaction failed");
     }
-
-    setError("");
-    setSuccess("");
-
-    try {
-      const tx = await window.tronWeb.transactionBuilder.sendTrx(
-        connectedWallet, // Recipient (self)
-        1, // 1 SUN (0.000001 TRX)
-        window.tronWeb.defaultAddress.base58, // Sender
-        { memo: "HI" } // Memo field
-      );
-
-      console.log("Transaction:", tx);
-      const signedTx = await window.tronWeb.trx.sign(tx);
-      console.log("Signed Transaction:", signedTx);
-      const result = await window.tronWeb.trx.sendRawTransaction(signedTx);
-      console.log("Result:", result);
-
-      if (result.result) {
-        setSuccess(`Transaction sent: 'HI' (TxID: ${result.txid})`);
-      } else {
-        throw new Error("Transaction failed");
-      }
-    } catch (err: any) {
-      console.error("Send HI error:", err);
-      setError(`Failed to send transaction: ${err.message || "Unknown error"}`);
-    }
-  };
+  } catch (err: any) {
+    console.error("Send HI error:", err);
+    setError(`Failed to send transaction: ${err.message || "Unknown error"}`);
+  }
+};
 
   const disconnect = () => {
     setConnectedWallet("");

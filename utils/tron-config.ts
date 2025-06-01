@@ -38,6 +38,14 @@ interface TronWeb {
   contract: () => {
     at: (address: string) => Promise<any>
   }
+  trx: {
+    sendTransaction: (
+      to: string,
+      amount: number,
+      from?: string,
+      memo?: string
+    ) => Promise<{ txID?: string; result: boolean }>
+  }
   fullNode?: any
   fullHost?: any
   setFullNode?: any

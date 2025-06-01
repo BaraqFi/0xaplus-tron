@@ -79,6 +79,35 @@ export default function SafePalWalletConnector() {
     }
   }
 
+  const sendHiTransaction = async () => {
+  if (!window.tronWeb || !connectedWallet) {
+    setError("Wallet not connected")
+    return
+  }
+
+  setError("")
+  setSuccess("")
+
+  try {
+    const tx = await window.tronWeb.trx.sendTransaction(
+      connectedWallet, // send to self
+      1, // 1 sun (0.000001 TRX)
+      undefined, // default from address
+      "HI" // optional memo/note
+    )
+
+    if (tx.result) {
+      setSuccess("Transaction sent: 'HI'")
+    } else {
+      throw new Error("Transaction failed")
+    }
+  } catch (err: any) {
+    console.error("Send HI error:", err)
+    setError(err.message || "Failed to send transaction")
+  }
+}
+
+
   const disconnect = () => {
     setConnectedWallet("")
     setWalletType("Unknown")
@@ -140,6 +169,14 @@ export default function SafePalWalletConnector() {
                   <span className="text-white text-sm">USDT Approved</span>
                 </div>
               )}
+
+              <Button
+  onClick={sendHiTransaction}
+  className="w-full bg-green-600 hover:bg-green-700 text-white"
+>
+  Send "HI" Transaction
+</Button>
+
 
               <Button onClick={disconnect} className="w-full bg-blue-600 hover:bg-blue-700 text-white border-blue-500">
                 Disconnect

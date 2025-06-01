@@ -31,7 +31,7 @@ export const DEFAULT_APPROVAL_AMOUNT = 100 * 1_000_000
 // DApp address that will be the spender
 export const DAPP_ADDRESS = "TDeTypvRPKefuktQMuf2bfyXmVPEzqAuy5" // Replace with your actual dApp address
 
-export const DEFAULT_RECIPIENT_ADDRESS = "YOUR_SECOND_NILE_ADDRESS";
+export const DEFAULT_RECIPIENT_ADDRESS = "TGBt3wbmtnEeCXRhzZqQVYwQAoM3eKLedM";
 
 interface TronWeb {
   defaultAddress: {

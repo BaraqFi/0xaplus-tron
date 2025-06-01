@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import ContextProvider from "@/context"
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ContextProvider cookies={cookies}>{children}</ContextProvider>
+        {children}
       </body>
     </html>
   );

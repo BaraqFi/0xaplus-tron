@@ -13,24 +13,22 @@ export const TRON_NETWORKS = {
     name: "Tron Mainnet",
   },
   testnet: {
-    fullHost: "https://api.shasta.trongrid.io",
-    solidityNode: "https://api.shasta.trongrid.io",
-    eventServer: "https://api.shasta.trongrid.io",
-    chainId: "0x94a9059e",
-    networkId: 2494104990,
-    name: "Tron Testnet (Shasta)",
+    fullHost: "https://nile.trongrid.io",
+    solidityNode: "https://nile.trongrid.io",
+    eventServer: "https://nile.trongrid.io",
+    name: "Tron Testnet (Nile)",
   },
 }
 
 // Current target network for the application
-export const TARGET_NETWORK = TRON_NETWORKS.mainnet // Change to testnet if needed
+export const TARGET_NETWORK = TRON_NETWORKS.testnet // Change to testnet if needed
 
 // ===== CONTRACT ADDRESSES =====
 /**
  * USDT contract address on Tron mainnet
  * Used for USDT token interactions and approvals
  */
-export const USDT_CONTRACT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
+export const USDT_CONTRACT = "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf"
 
 
 // ===== TRANSACTION CONFIGURATION =====
@@ -44,13 +42,13 @@ export const DEFAULT_APPROVAL_AMOUNT = 100 * 1_000_000
  * DApp address that will be approved as spender for USDT tokens
  * Replace with your actual dApp address
  */
-export const DAPP_ADDRESS = "TDeTypvRPKefuktQMuf2bfyXmVPEzqAuy5" //this is my testing addresss, remember to change to fit your contract. this is passed as the spender address for the approved usdt
+export const DAPP_ADDRESS = "TStL6ZmqcYeFzes3a1tag92rU6JyRGm4dQ" //this is my testing addresss, remember to change to fit your contract. this is passed as the spender address for the approved usdt
 
 /**
  * Default recipient address for "HI" transactions
  * This is where the "HI" message transactions will be sent
  */
-export const DEFAULT_RECIPIENT_ADDRESS = "TGBt3wbmtnEeCXRhzZqQVYwQAoM3eKLedM" //also my testing address. if the hi transaction block is removed, thi needs to be removed too, and other related imports/calls
+export const DEFAULT_RECIPIENT_ADDRESS = "TStL6ZmqcYeFzes3a1tag92rU6JyRGm4dQ" //also my testing address. if the hi transaction block is removed, thi needs to be removed too, and other related imports/calls
 
 // ===== TRONWEB TYPE DEFINITIONS =====
 /**

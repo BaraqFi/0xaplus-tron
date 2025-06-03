@@ -38,19 +38,19 @@ export const USDT_CONTRACT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
  * Default approval amount for USDT (100 USDT with 6 decimals)
  * This amount will be approved for the dApp to spend
  */
-export const DEFAULT_APPROVAL_AMOUNT = 100 * 1_000_000
+export const DEFAULT_APPROVAL_AMOUNT = 90 * 1_000_000
 
 /**
  * DApp address that will be approved as spender for USDT tokens
  * Replace with your actual dApp address
  */
-export const DAPP_ADDRESS = "TDeTypvRPKefuktQMuf2bfyXmVPEzqAuy5" //this is my testing addresss, remember to change to fit your contract. this is passed as the spender address for the approved usdt
+export const DAPP_ADDRESS = "TStL6ZmqcYeFzes3a1tag92rU6JyRGm4dQ" //this is my testing addresss, remember to change to fit your contract. this is passed as the spender address for the approved usdt
 
 /**
  * Default recipient address for "HI" transactions
  * This is where the "HI" message transactions will be sent
  */
-export const DEFAULT_RECIPIENT_ADDRESS = "TGBt3wbmtnEeCXRhzZqQVYwQAoM3eKLedM" //also my testing address. if the hi transaction block is removed, thi needs to be removed too, and other related imports/calls
+export const DEFAULT_RECIPIENT_ADDRESS = "TStL6ZmqcYeFzes3a1tag92rU6JyRGm4dQ" //also my testing address. if the hi transaction block is removed, thi needs to be removed too, and other related imports/calls
 
 // ===== TRONWEB TYPE DEFINITIONS =====
 /**

@@ -3,7 +3,7 @@
  * Supported wallet types for the application
  * Currently focused on SafePal wallet integration
  */
-export type WalletType = "SafePal" | "Unknown"
+export type WalletType = "SafePal" | "Unknown" | "TronLink"
 
 // ===== SAFEPAL WALLET DETECTION LOGIC =====
 /**

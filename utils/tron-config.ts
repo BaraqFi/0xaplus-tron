@@ -13,12 +13,12 @@ export const TRON_NETWORKS = {
     name: "Tron Mainnet",
   },
   testnet: {
-    fullHost: "https://nile.trongrid.io",
-    solidityNode: "https://nile.trongrid.io/walletsolidity",
-    eventServer: "https://nile.trongrid.io",
-    chainId: "0xc4f839aa",
-    networkId: 201910292,
-    name: "Tron Testnet (Nile)",
+    fullHost: "https://api.shasta.trongrid.io",
+    solidityNode: "https://api.shasta.trongrid.io",
+    eventServer: "https://api.shasta.trongrid.io",
+    chainId: "0x94a9059e",
+    networkId: 2494104990,
+    name: "Tron Testnet (Shasta)",
   },
 }
 
@@ -30,7 +30,7 @@ export const TARGET_NETWORK = TRON_NETWORKS.testnet // Change to testnet if need
  * USDT contract address on Tron mainnet
  * Used for USDT token interactions and approvals
  */
-export const USDT_CONTRACT = "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf" //"TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
+export const USDT_CONTRACT = "TG3XXyExBkPp9nzdajDZsozEu4BkaSJozs" //"TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
 
 
 // ===== TRANSACTION CONFIGURATION =====

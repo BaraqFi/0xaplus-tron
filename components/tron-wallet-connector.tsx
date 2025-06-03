@@ -46,25 +46,46 @@ export default function SafePalWalletConnector() {
    * Connects to SafePal wallet using the SafePalConnector
    * This function specifically handles SafePal wallet integration
    */
-  const connectWallet = async () => {
+  // Helper: Waits for TronWeb to be injected (max ~3s)
+const waitForTronWeb = (): Promise<boolean> => {
+  return new Promise((resolve) => {
+    let attempts = 0
+    const check = () => {
+      if (window.tronWeb && window.tronWeb.defaultAddress?.base58) {
+        resolve(true)
+      } else if (attempts < 10) {
+        attempts++
+        setTimeout(check, 500)
+      } else {
+        resolve(false)
+      }
+    }
+    check()
+  })
+}
+
+const connectWallet = async () => {
   setIsConnecting(true)
   setError("")
   setSuccess("")
 
   try {
-    // Attempt SafePal connection first
+    // === Attempt SafePal connection first ===
     const safePal = SafePalConnector.getInstance()
     let result = await safePal.connect()
     console.log("SafePal Connect Result:", result)
     console.log("TronWeb Available:", !!window.tronWeb, window.tronWeb?.defaultAddress)
 
     if (!result.success || !window.tronWeb?.defaultAddress?.base58) {
-      // Try TronLink as fallback
+      // === Fallback to TronLink ===
+      const ready = await waitForTronWeb()
+      if (!ready) throw new Error("TronLink not detected or unlocked")
+
       const tronLink = TronLinkConnector.getInstance()
       result = await tronLink.connect()
       console.log("TronLink Connect Result:", result)
 
-      if (result.success && window.tronWeb && window.tronWeb.defaultAddress.base58) {
+      if (result.success && window.tronWeb?.defaultAddress?.base58) {
         setConnectedWallet(result.address)
         setWalletType("TronLink")
         setSuccess("Connected via TronLink!")
@@ -74,7 +95,7 @@ export default function SafePalWalletConnector() {
       }
     }
 
-    // SafePal was successful
+    // === SafePal was successful ===
     setConnectedWallet(result.address)
     setWalletType("SafePal")
     setSuccess("Successfully connected SafePal wallet!")
@@ -85,6 +106,7 @@ export default function SafePalWalletConnector() {
     setIsConnecting(false)
   }
 }
+
 
   // ===== USDT APPROVAL FUNCTIONALITY =====
   /**

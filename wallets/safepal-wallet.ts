@@ -118,7 +118,7 @@ export class SafePalConnector {
 
       if (fullHost?.includes("api.trongrid.io")) {
         return TRON_NETWORKS.mainnet
-      } else if (fullHost?.includes("api.shasta.trongrid.io")) {
+      } else if (fullHost?.includes("https://nile.trongrid.io")) {
         return TRON_NETWORKS.testnet
       }
 
